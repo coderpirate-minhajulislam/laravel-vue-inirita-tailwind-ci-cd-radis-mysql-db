@@ -17,5 +17,7 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+
+        hello
     </body>
 </html>
