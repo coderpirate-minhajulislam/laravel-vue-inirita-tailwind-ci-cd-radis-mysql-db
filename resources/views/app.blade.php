@@ -18,6 +18,6 @@
     <body class="font-sans antialiased">
         @inertia
 
-        hello
+        hello test
     </body>
 </html>
