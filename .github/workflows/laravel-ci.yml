@@ -98,73 +98,46 @@
 #           mirror -R ./ /public_html/your-app-directory;  # Adjust path to your app's root on the server
 #           bye
 #         "
-
-name: Laravel CI/CD with Vue and Docker
+name: Deploy to Hostinger
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # Trigger on push to the main branch
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: mbstring, bcmath, zip, pdo, redis
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, bcmath, zip, intl
 
-    - name: Install Composer dependencies
-      run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --optimize-autoloader
 
-    - name: Copy .env.example to .env
-      run: cp .env.example .env
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
 
-    - name: Set environment variables
-      run: |
-        echo "APP_ENV=production" >> .env
-        echo "APP_DEBUG=false" >> .env
-        echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
+      - name: Install Node.js dependencies
+        run: |
+          npm install
+          npm run prod
 
-    - name: Generate key
-      run: php artisan key:generate
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'
-
-    - name: Install npm dependencies
-      run: npm install
-
-    - name: Compile frontend assets for production
-      run: npm run production
-
-    - name: Run Laravel Artisan optimize commands
-      run: |
-        php artisan config:cache
-        php artisan route:cache
-        php artisan view:cache
-
-    - name: Run tests
-      run: php artisan test
-
-    - name: Deploy to shared hosting via FTP
-      if: success()  # Only deploy if previous steps were successful
-      run: |
-        sudo apt-get update && sudo apt-get install -y lftp
-        lftp -e "
-          set ftp:ssl-allow no;  # Disable SSL if not supported by FTP server
-          open -u ${{ secrets.FTP_USER }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_HOST }};
-          mirror -R ./ /public_html/your-app-directory;  # Adjust path to your app's root on the server
-          bye
-        "
+      - name: Upload to Hostinger via FTP
+        uses: appleboy/ftp-action@v1
+        with:
+          host: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          source: "./"
+          target: "/public_html"
