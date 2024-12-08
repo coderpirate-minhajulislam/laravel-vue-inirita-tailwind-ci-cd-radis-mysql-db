@@ -18,7 +18,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.2'
-        extensions: mbstring, bcmath, zip, pdo, pdo_mysql
+        extensions: mbstring, bcmath, zip, pdo_sqlite
 
     - name: Install Composer dependencies
       run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
@@ -35,12 +35,12 @@ jobs:
       run: |
         echo "APP_ENV=production" >> .env
         echo "APP_DEBUG=false" >> .env
-        echo "DB_CONNECTION=mysql" >> .env
-        echo "DB_HOST=127.0.0.1" >> .env
-        echo "DB_PORT=3306" >> .env
-        echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
-        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+        echo "DB_CONNECTION=sqlite" >> .env
+        echo "DB_DATABASE=/tmp/database.sqlite" >> .env
+
+    - name: Create SQLite database file
+      run: |
+        touch /tmp/database.sqlite
 
     - name: Run migrations
       run: php artisan migrate --force
