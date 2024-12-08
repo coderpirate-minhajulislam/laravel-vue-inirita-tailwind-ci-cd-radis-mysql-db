@@ -38,9 +38,9 @@ jobs:
         echo "DB_CONNECTION=mysql" >> .env
         echo "DB_HOST=127.0.0.1" >> .env
         echo "DB_PORT=3306" >> .env
-        echo "DB_DATABASE=coderpir_admin" >> .env
-        echo "DB_USERNAME=coderpir_adminusr" >> .env
-        echo "DB_PASSWORD=Minhaz@1332" >> .env
+        echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
+        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
 
     - name: Run migrations
       run: php artisan migrate --force
@@ -65,9 +65,9 @@ jobs:
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@4.3.2
       with:
-        server: ftp.coderpirate.com
-        username: admin@coderpirate.com
-        password: 'Minhaz@1332'
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
         protocol: ftps
         port: 21
         local-dir: './'
