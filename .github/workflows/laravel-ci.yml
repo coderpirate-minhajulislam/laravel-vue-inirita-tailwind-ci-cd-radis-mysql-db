@@ -65,9 +65,9 @@ jobs:
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@4.3.2
       with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
+        server: ftp.arcadiemrealestate.com
+        username: u298228918.admin
+        password: 'Admin@1332'
         protocol: ftps
         port: 21
         local-dir: './'
