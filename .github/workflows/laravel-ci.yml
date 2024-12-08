@@ -31,24 +31,24 @@ jobs:
         php artisan key:generate --force
         echo "APP_KEY=$(php artisan key:generate --show)" >> .env
 
-    # - name: Set environment variables
-    #   run: |
-    #     echo "APP_ENV=production" >> .env
-    #     echo "APP_DEBUG=false" >> .env
-    #     echo "DB_CONNECTION=mysql" >> .env
-    #     echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
-    #     echo "DB_PORT=3306" >> .env
-    #     echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
-    #     echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-    #     echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+    - name: Set environment variables
+      run: |
+        echo "APP_ENV=production" >> .env
+        echo "APP_DEBUG=false" >> .env
+        echo "DB_CONNECTION=mysql" >> .env
+        echo "DB_HOST=127.0.0.1" >> .env
+        echo "DB_PORT=3306" >> .env
+        echo "DB_DATABASE=u298228918_laravelbd" >> .env
+        echo "DB_USERNAME=u298228918_laravel" >> .env
+        echo "DB_PASSWORD=Admin@1332" >> .env
 
-    # - name: Run migrations
-    #   run: php artisan migrate --force
+    - name: Run migrations
+      run: php artisan migrate --force
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '18'
 
     - name: Install npm dependencies
       run: npm install
